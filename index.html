@@ -561,6 +561,7 @@
 
         // Sauvegarder les résultats
         function saveResults() {
+          if (await saveData()) {
             if (saveData()) {
                 // Créer un fichier de sauvegarde
                 const dataStr = JSON.stringify(departmentNames, null, 2);
@@ -578,6 +579,7 @@
             } else {
                 showMessage('saveMessage', '❌ Erreur lors de la sauvegarde', true);
             }
+          }
         }
 
         // Event listeners
