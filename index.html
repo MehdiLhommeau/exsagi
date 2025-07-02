@@ -360,23 +360,33 @@
             }
         }
 
-        // Charger depuis Firebase
         async function loadFromFirebase() {
             const { db, getDocs, collection, query, orderBy } = window.firebaseApp;
             const q = query(collection(db, 'departmentNames'), orderBy('votes', 'desc'));
             const querySnapshot = await getDocs(q);
-            
+    
             if (!querySnapshot.empty) {
                 departmentNames = [];
-                querySnapshot.forEach((doc) => {
-                    departmentNames.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data.name && typeof data.votes === 'number') {
+                        departmentNames.push({
+                            id: docSnap.id,
+                            name: data.name,
+                            votes: data.votes
+                        });
+                    }
                 });
+
+                renderNames(); // 👈 À faire ici, une fois la liste mise à jour
+            } else {
+                console.warn("⚠️ Aucun document trouvé dans Firestore.");
+                departmentNames = [];
+                renderNames(); // 👈 Pour afficher "0 proposition" quand Firestore est vide
             }
         }
-
+        
+        
         // Charger depuis localStorage
         function loadFromLocalStorage() {
             const savedData = localStorage.getItem('departmentVotingData');
@@ -579,10 +589,8 @@
         });
         document.getElementById('saveBtn').addEventListener('click', saveResults);
 
-        // Initialisation
         async function init() {
-            await loadData();
-            renderNames();
+            await loadData(); // renderNames sera appelée dans loadFromFirebase ou loadFromLocalStorage
         }
 
         init();
