@@ -589,8 +589,10 @@
         });
         document.getElementById('saveBtn').addEventListener('click', saveResults);
 
+        // Initialisation
         async function init() {
-            await loadData(); // renderNames sera appelée dans loadFromFirebase ou loadFromLocalStorage
+            await loadData();
+            renderNames();
         }
 
         init();
