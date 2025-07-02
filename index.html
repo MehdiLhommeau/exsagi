@@ -268,8 +268,9 @@
             <div class="add-section">
                 <h2>✨ Proposer un nouveau nom</h2>
                 <div class="input-group">
-                    <input type="text" id="newNameInput" placeholder="Entrez votre proposition de nom..." maxlength="100">
-                    <button id="addNameBtn">Ajouter</button>
+                    <label for="newNameInput" class="visually-hidden">Proposition de nom</label>
+                    <input type="text" id="newNameInput" placeholder="Entrez votre proposition de nom..." maxlength="100" aria-label="Proposition de nom">
+                    <button id="addNameBtn" type="button">Ajouter</button>
                 </div>
                 <div id="addMessage"></div>
             </div>
@@ -290,7 +291,7 @@
             </div>
             
             <div class="save-section">
-                <button class="save-btn" id="saveBtn">💾 Sauvegarder les résultats</button>
+                <button class="save-btn" id="saveBtn" type="button">💾 Sauvegarder les résultats</button>
                 <div id="saveMessage"></div>
             </div>
         </div>
@@ -298,27 +299,22 @@
 
     <!-- Firebase SDK -->
     <script type="module">
-        // Import Firebase modules
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
         const firebaseConfig = {
             apiKey: "AIzaSyC796gjvtciOtx_xnG78pWAIl3B3M59P4s",
             authDomain: "ex-sagi-8d2ec.firebaseapp.com",
             projectId: "ex-sagi-8d2ec",
-            storageBucket: "ex-sagi-8d2ec.firebasestorage.app",
+            storageBucket: "ex-sagi-8d2ec.appspot.com", // corrigé ici
             messagingSenderId: "913081876853",
             appId: "1:913081876853:web:8cdef71e1bb015a140133c",
             measurementId: "G-8ZGBYXEN68"
         };
-        
 
-        // Initialiser Firebase
         let app, db;
         let isFirebaseEnabled = false;
-        
+
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
@@ -348,13 +344,16 @@
             if (window.firebaseApp && window.firebaseApp.isFirebaseEnabled) {
                 try {
                     await loadFromFirebase();
+                    updateFirebaseStatus(true);
                     showMessage('saveMessage', '✅ Données chargées depuis la base de données', false);
                 } catch (error) {
                     console.error('Erreur Firebase, utilisation du stockage local:', error);
+                    updateFirebaseStatus(false);
                     loadFromLocalStorage();
                     showMessage('saveMessage', '⚠️ Mode hors ligne - utilisation du stockage local', true);
                 }
             } else {
+                updateFirebaseStatus(false);
                 loadFromLocalStorage();
                 showMessage('saveMessage', '⚠️ Firebase non configuré - utilisation du stockage local', true);
             }
@@ -364,7 +363,7 @@
             const { db, getDocs, collection, query, orderBy } = window.firebaseApp;
             const q = query(collection(db, 'departmentNames'), orderBy('votes', 'desc'));
             const querySnapshot = await getDocs(q);
-    
+
             if (!querySnapshot.empty) {
                 departmentNames = [];
                 querySnapshot.forEach((docSnap) => {
@@ -377,17 +376,13 @@
                         });
                     }
                 });
-
-                renderNames(); // 👈 À faire ici, une fois la liste mise à jour
+                renderNames();
             } else {
-                console.warn("⚠️ Aucun document trouvé dans Firestore.");
                 departmentNames = [];
-                renderNames(); // 👈 Pour afficher "0 proposition" quand Firestore est vide
+                renderNames();
             }
         }
-        
-        
-        // Charger depuis localStorage
+
         function loadFromLocalStorage() {
             const savedData = localStorage.getItem('departmentVotingData');
             if (savedData) {
@@ -402,7 +397,6 @@
         // Sauvegarder les données
         async function saveData() {
             let success = false;
-            
             if (window.firebaseApp && window.firebaseApp.isFirebaseEnabled) {
                 try {
                     await saveToFirebase();
@@ -414,18 +408,14 @@
             } else {
                 success = saveToLocalStorage();
             }
-            
             return success;
         }
 
-        // Sauvegarder vers Firebase
         async function saveToFirebase() {
-            // Cette fonction est appelée pour les nouveaux éléments
-            // Les votes sont mis à jour individuellement dans la fonction vote()
+            // Rien à faire ici, car chaque ajout/vote est déjà sauvegardé en temps réel
             return true;
         }
 
-        // Sauvegarder vers localStorage
         function saveToLocalStorage() {
             try {
                 localStorage.setItem('departmentVotingData', JSON.stringify(departmentNames));
@@ -436,7 +426,6 @@
             }
         }
 
-        // Afficher un message
         function showMessage(elementId, message, isError = false) {
             const element = document.getElementById(elementId);
             element.innerHTML = `<div class="message ${isError ? 'error' : 'success'}">${message}</div>`;
@@ -445,42 +434,33 @@
             }, 3000);
         }
 
-        // Rendre la liste des noms
         function renderNames() {
             const namesList = document.getElementById('namesList');
-            
-            // Trier par nombre de votes (décroissant)
             const sortedNames = [...departmentNames].sort((a, b) => b.votes - a.votes);
-            
             namesList.innerHTML = sortedNames.map((item, index) => `
                 <div class="name-item">
                     <div class="name-text">${item.name}</div>
                     <div class="vote-section">
                         <div class="vote-count">${item.votes} vote${item.votes !== 1 ? 's' : ''}</div>
-                        <button class="vote-btn" onclick="vote('${item.name}')">+1 👍</button>
+                        <button class="vote-btn" onclick="vote('${item.name.replace(/'/g, "\\'")}')" aria-label="Voter pour ${item.name}">+1 👍</button>
                     </div>
                 </div>
             `).join('');
-            
             updateStats();
         }
 
-        // Mettre à jour les statistiques
         function updateStats() {
             const totalVotes = departmentNames.reduce((sum, item) => sum + item.votes, 0);
             const totalNames = departmentNames.length;
-            
             document.getElementById('totalVotes').textContent = totalVotes;
             document.getElementById('totalNames').textContent = totalNames;
         }
 
         // Voter pour un nom
-        async function vote(name) {
+        window.vote = async function(name) {
             const nameItem = departmentNames.find(item => item.name === name);
             if (nameItem) {
                 nameItem.votes++;
-                
-                // Mettre à jour Firebase si disponible
                 if (window.firebaseApp && window.firebaseApp.isFirebaseEnabled) {
                     try {
                         const { db, doc, updateDoc } = window.firebaseApp;
@@ -489,14 +469,13 @@
                         });
                     } catch (error) {
                         console.error('Erreur mise à jour Firebase:', error);
-                        saveToLocalStorage(); // Fallback vers localStorage
+                        saveToLocalStorage();
+                        updateFirebaseStatus(false);
                     }
                 } else {
                     saveToLocalStorage();
                 }
-                
                 renderNames();
-                
                 // Animation de feedback
                 const voteButtons = document.querySelectorAll('.vote-btn');
                 voteButtons.forEach(btn => {
@@ -514,27 +493,21 @@
         async function addName() {
             const input = document.getElementById('newNameInput');
             const newName = input.value.trim();
-            
+
             if (!newName) {
                 showMessage('addMessage', '⚠️ Veuillez entrer un nom', true);
                 return;
             }
-            
             if (newName.length > 100) {
                 showMessage('addMessage', '⚠️ Le nom est trop long (max 100 caractères)', true);
                 return;
             }
-            
-            // Vérifier si le nom existe déjà
             if (departmentNames.some(item => item.name.toLowerCase() === newName.toLowerCase())) {
                 showMessage('addMessage', '⚠️ Ce nom existe déjà', true);
                 return;
             }
-            
-            // Créer le nouvel élément
+
             const newItem = { name: newName, votes: 1 };
-            
-            // Ajouter à Firebase si disponible
             if (window.firebaseApp && window.firebaseApp.isFirebaseEnabled) {
                 try {
                     const { db, collection, addDoc } = window.firebaseApp;
@@ -543,43 +516,50 @@
                     showMessage('addMessage', '✅ Nom ajouté avec succès dans la base de données !');
                 } catch (error) {
                     console.error('Erreur ajout Firebase:', error);
-                    newItem.id = Date.now().toString(); // ID temporaire
+                    newItem.id = Date.now().toString();
                     saveToLocalStorage();
                     showMessage('addMessage', '✅ Nom ajouté localement (erreur de synchronisation)');
+                    updateFirebaseStatus(false);
                 }
             } else {
                 newItem.id = Date.now().toString();
                 saveToLocalStorage();
                 showMessage('addMessage', '✅ Nom ajouté localement !');
             }
-            
-            // Ajouter à la liste locale
             departmentNames.push(newItem);
             input.value = '';
             renderNames();
         }
 
-        // Sauvegarder les résultats
-        function saveResults() {
-          if (await saveData()) {
-            if (saveData()) {
-                // Créer un fichier de sauvegarde
+        // Sauvegarder les résultats (corrigé en async)
+        async function saveResults() {
+            if (await saveData()) {
                 const dataStr = JSON.stringify(departmentNames, null, 2);
                 const dataBlob = new Blob([dataStr], {type: 'application/json'});
                 const url = URL.createObjectURL(dataBlob);
-                
                 const link = document.createElement('a');
                 link.href = url;
                 link.download = `resultats_vote_departement_${new Date().toISOString().split('T')[0]}.json`;
                 link.click();
-                
                 URL.revokeObjectURL(url);
-                
                 showMessage('saveMessage', '✅ Résultats sauvegardés avec succès !');
             } else {
                 showMessage('saveMessage', '❌ Erreur lors de la sauvegarde', true);
             }
-          }
+        }
+
+        // Affichage du statut Firebase
+        function updateFirebaseStatus(isConnected) {
+            const statusDiv = document.getElementById('firebaseStatus');
+            if (isConnected) {
+                statusDiv.classList.add('connected');
+                statusDiv.classList.remove('disconnected');
+                statusDiv.innerHTML = '<p>🟢 Connecté à la base de données Firebase</p>';
+            } else {
+                statusDiv.classList.remove('connected');
+                statusDiv.classList.add('disconnected');
+                statusDiv.innerHTML = '<p>🟠 Mode hors ligne ou erreur de connexion à Firebase</p>';
+            }
         }
 
         // Event listeners
@@ -596,8 +576,18 @@
             await loadData();
             renderNames();
         }
-
         init();
     </script>
+    <style>
+        /* Accessibilité visuelle cachée */
+        .visually-hidden {
+            position: absolute;
+            left: -10000px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+    </style>
 </body>
 </html>
