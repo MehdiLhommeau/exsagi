@@ -435,7 +435,7 @@
 
             if (isFirebaseEnabled) {
                 try {
-                    const newItem = { name: newName, votes: 1 };
+                    const newItem = { name: newName, votes: 0 };
                     const docRef = await addDoc(collection(db, 'departmentNames'), newItem);
                     newItem.id = docRef.id;
                     departmentNames.push(newItem);
