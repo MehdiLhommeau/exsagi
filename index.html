@@ -5,19 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vote pour le Nom du Département</title>
     <style>
+        /* Your CSS styles here, unchanged */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -27,29 +28,29 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             padding: 30px;
             text-align: center;
         }
-        
+
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
-        
+
         .header p {
             font-size: 1.1em;
             opacity: 0.9;
         }
-        
+
         .content {
             padding: 30px;
         }
-        
+
         .add-section {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             border-radius: 15px;
@@ -57,18 +58,18 @@
             margin-bottom: 30px;
             color: white;
         }
-        
+
         .add-section h2 {
             margin-bottom: 15px;
             font-size: 1.5em;
         }
-        
+
         .input-group {
             display: flex;
             gap: 10px;
             margin-bottom: 15px;
         }
-        
+
         #newNameInput {
             flex: 1;
             padding: 12px 15px;
@@ -78,7 +79,7 @@
             outline: none;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         #addNameBtn {
             background: rgba(255, 255, 255, 0.2);
             color: white;
@@ -89,20 +90,20 @@
             font-weight: bold;
             transition: all 0.3s ease;
         }
-        
+
         #addNameBtn:hover {
             background: white;
             color: #f5576c;
             transform: translateY(-2px);
         }
-        
+
         .voting-section h2 {
             color: #333;
             margin-bottom: 20px;
             font-size: 1.8em;
             text-align: center;
         }
-        
+
         .name-item {
             background: white;
             border-radius: 12px;
@@ -115,25 +116,25 @@
             transition: all 0.3s ease;
             border: 2px solid transparent;
         }
-        
+
         .name-item:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             border-color: #667eea;
         }
-        
+
         .name-text {
             font-size: 1.2em;
             font-weight: 600;
             color: #333;
         }
-        
+
         .vote-section {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        
+
         .vote-count {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -144,7 +145,7 @@
             text-align: center;
             box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
         }
-        
+
         .vote-btn {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
@@ -156,16 +157,16 @@
             transition: all 0.3s ease;
             box-shadow: 0 2px 10px rgba(79, 172, 254, 0.3);
         }
-        
+
         .vote-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(79, 172, 254, 0.5);
         }
-        
+
         .vote-btn:active {
             transform: translateY(0);
         }
-        
+
         .stats {
             background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
             color: white;
@@ -174,35 +175,18 @@
             margin-top: 30px;
             text-align: center;
         }
-        
+
         .stats h3 {
             margin-bottom: 10px;
             font-size: 1.3em;
         }
-        
+
         .save-section {
             text-align: center;
             margin-top: 30px;
         }
-        
-        .save-btn {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            color: #333;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1.1em;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .save-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-        }
-        
+
+
         .firebase-status {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
@@ -211,15 +195,15 @@
             text-align: center;
             border-left: 4px solid #2196f3;
         }
-        
+
         .firebase-status.connected {
             border-left-color: #4caf50;
         }
-        
+
         .firebase-status.disconnected {
             border-left-color: #ff9800;
         }
-        
+
         .message {
             padding: 10px;
             margin: 10px 0;
@@ -227,30 +211,30 @@
             font-weight: bold;
             text-align: center;
         }
-        
+
         .success {
             background: rgba(76, 175, 80, 0.1);
             color: #4caf50;
             border: 1px solid #4caf50;
         }
-        
+
         .error {
             background: rgba(244, 67, 54, 0.1);
             color: #f44336;
             border: 1px solid #f44336;
         }
-        
+
         @media (max-width: 600px) {
             .input-group {
                 flex-direction: column;
             }
-            
+
             .name-item {
                 flex-direction: column;
                 text-align: center;
                 gap: 15px;
             }
-            
+
             .vote-section {
                 justify-content: center;
             }
@@ -261,177 +245,103 @@
     <div class="container">
         <div class="header">
             <h1>🎓 Vote pour le Nom du Département</h1>
-            <p>École d'Ingénieurs - Participez au choix du nom de notre nouveau département</p>
+            <p>École d'Ingénieurs - Participez au choix du nouveau nom de notre département</p>
         </div>
-        
+
         <div class="content">
             <div class="add-section">
                 <h2>✨ Proposer un nouveau nom</h2>
                 <div class="input-group">
-                    <label for="newNameInput" class="visually-hidden">Proposition de nom</label>
-                    <input type="text" id="newNameInput" placeholder="Entrez votre proposition de nom..." maxlength="100" aria-label="Proposition de nom">
-                    <button id="addNameBtn" type="button">Ajouter</button>
+                    <input type="text" id="newNameInput" placeholder="Entrez votre proposition de nom..." maxlength="100">
+                    <button id="addNameBtn">Ajouter</button>
                 </div>
                 <div id="addMessage"></div>
             </div>
-            
+
             <div class="firebase-status" id="firebaseStatus">
                 <p>🔄 Vérification de la connexion à la base de données...</p>
             </div>
-            
+
             <div class="voting-section">
                 <h2>🗳️ Votez pour votre nom préféré</h2>
                 <div id="namesList"></div>
             </div>
-            
+
             <div class="stats">
                 <h3>📊 Statistiques</h3>
                 <p>Total des votes: <span id="totalVotes">0</span></p>
                 <p>Nombre de propositions: <span id="totalNames">0</span></p>
             </div>
-            
-            <div class="save-section">
-                <button class="save-btn" id="saveBtn" type="button">💾 Sauvegarder les résultats</button>
-                <div id="saveMessage"></div>
-            </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
+        // Import Firebase modules
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
+        // Configuration Firebase (à remplacer par vos propres clés)
         const firebaseConfig = {
-
-  apiKey: "AIzaSyC796gjvtciOtx_xnG78pWAIl3B3M59P4s",
-
-  authDomain: "ex-sagi-8d2ec.firebaseapp.com",
-
-  projectId: "ex-sagi-8d2ec",
-
-  storageBucket: "ex-sagi-8d2ec.firebasestorage.app",
-
-  messagingSenderId: "913081876853",
-
-  appId: "1:913081876853:web:8cdef71e1bb015a140133c",
-
-  measurementId: "G-8ZGBYXEN68"
-
-};
+            apiKey: "AIzaSyDjG0SGk8c-LeX29jEKLYMByZTuWe_ma1E",
+            authDomain: "votedepartement.firebaseapp.com",
+            projectId: "votedepartement",
+            storageBucket: "votedepartement.firebasestorage.app",
+            messagingSenderId: "755292938409",
+            appId: "1:755292938409:web:ec1031d3b80cea82cb89b8"
+        };
         
+        // Initialiser Firebase
         let app, db;
         let isFirebaseEnabled = false;
+        const firebaseStatusElement = document.getElementById('firebaseStatus');
 
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             isFirebaseEnabled = true;
             console.log('Firebase initialisé avec succès');
+            firebaseStatusElement.innerHTML = '<p class="connected">✅ Connecté à Firebase</p>';
+            firebaseStatusElement.classList.add('connected');
         } catch (error) {
             console.error('Erreur d\'initialisation Firebase:', error);
             isFirebaseEnabled = false;
+            firebaseStatusElement.innerHTML = '<p class="disconnected">❌ Erreur de connexion à Firebase. Les données ne seront pas sauvegardées.</p>';
+            firebaseStatusElement.classList.add('disconnected');
         }
 
-        // Rendre les fonctions disponibles globalement
-        window.firebaseApp = { app, db, isFirebaseEnabled, addDoc, getDocs, doc, updateDoc, collection, query, orderBy };
-    </script>
+        // --- All application logic moved into this module script ---
 
-    <script>
-        // Structure de données pour stocker les noms et votes
-        let departmentNames = [
-            { id: '1', name: "Génie Informatique et Innovation", votes: 5 },
-            { id: '2', name: "Technologies Numériques Avancées", votes: 3 },
-            { id: '3', name: "Ingénierie des Systèmes Intelligents", votes: 7 },
-            { id: '4', name: "Sciences et Technologies du Numérique", votes: 2 },
-            { id: '5', name: "Département d'Innovation Technologique", votes: 4 }
-        ];
+        let departmentNames = []; // Initialement vide, sera rempli par Firebase
 
-        // Charger les données depuis Firebase ou localStorage
         async function loadData() {
-            if (window.firebaseApp && window.firebaseApp.isFirebaseEnabled) {
+            if (isFirebaseEnabled) { // Directly use isFirebaseEnabled here
                 try {
                     await loadFromFirebase();
-                    updateFirebaseStatus(true);
-                    showMessage('saveMessage', '✅ Données chargées depuis la base de données', false);
+                    showMessage('addMessage', '✅ Données chargées depuis la base de données', false);
                 } catch (error) {
-                    console.error('Erreur Firebase, utilisation du stockage local:', error);
-                    updateFirebaseStatus(false);
-                    loadFromLocalStorage();
-                    showMessage('saveMessage', '⚠️ Mode hors ligne - utilisation du stockage local', true);
+                    console.error('Erreur de chargement Firebase:', error);
+                    showMessage('addMessage', '⚠️ Erreur de chargement des données depuis Firebase. Vérifiez vos règles de sécurité et votre connexion.', true);
                 }
             } else {
-                updateFirebaseStatus(false);
-                loadFromLocalStorage();
-                showMessage('saveMessage', '⚠️ Firebase non configuré - utilisation du stockage local', true);
+                showMessage('addMessage', '⚠️ Firebase non configuré ou connexion échouée. Impossible de charger les données.', true);
             }
         }
 
         async function loadFromFirebase() {
-            const { db, getDocs, collection, query, orderBy } = window.firebaseApp;
+            // Access db, collection, query, orderBy directly since they are in scope
             const q = query(collection(db, 'departmentNames'), orderBy('votes', 'desc'));
             const querySnapshot = await getDocs(q);
 
+            departmentNames = []; // Vider la liste actuelle
             if (!querySnapshot.empty) {
-                departmentNames = [];
-                querySnapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    if (data.name && typeof data.votes === 'number') {
-                        departmentNames.push({
-                            id: docSnap.id,
-                            name: data.name,
-                            votes: data.votes
-                        });
-                    }
+                querySnapshot.forEach((doc) => {
+                    departmentNames.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
                 });
-                renderNames();
-            } else {
-                departmentNames = [];
-                renderNames();
             }
-        }
-
-        function loadFromLocalStorage() {
-            const savedData = localStorage.getItem('departmentVotingData');
-            if (savedData) {
-                try {
-                    departmentNames = JSON.parse(savedData);
-                } catch (e) {
-                    console.error('Erreur lors du chargement des données locales:', e);
-                }
-            }
-        }
-
-        // Sauvegarder les données
-        async function saveData() {
-            let success = false;
-            if (window.firebaseApp && window.firebaseApp.isFirebaseEnabled) {
-                try {
-                    await saveToFirebase();
-                    success = true;
-                } catch (error) {
-                    console.error('Erreur sauvegarde Firebase:', error);
-                    success = saveToLocalStorage();
-                }
-            } else {
-                success = saveToLocalStorage();
-            }
-            return success;
-        }
-
-        async function saveToFirebase() {
-            // Rien à faire ici, car chaque ajout/vote est déjà sauvegardé en temps réel
-            return true;
-        }
-
-        function saveToLocalStorage() {
-            try {
-                localStorage.setItem('departmentVotingData', JSON.stringify(departmentNames));
-                return true;
-            } catch (e) {
-                console.error('Erreur lors de la sauvegarde locale:', e);
-                return false;
-            }
+            console.log("Données chargées depuis Firebase:", departmentNames);
         }
 
         function showMessage(elementId, message, isError = false) {
@@ -445,49 +355,56 @@
         function renderNames() {
             const namesList = document.getElementById('namesList');
             const sortedNames = [...departmentNames].sort((a, b) => b.votes - a.votes);
+
             namesList.innerHTML = sortedNames.map((item, index) => `
                 <div class="name-item">
                     <div class="name-text">${item.name}</div>
                     <div class="vote-section">
                         <div class="vote-count">${item.votes} vote${item.votes !== 1 ? 's' : ''}</div>
-                        <button class="vote-btn" onclick="vote('${item.name.replace(/'/g, "\\'")}')" aria-label="Voter pour ${item.name}">+1 👍</button>
+                        <button class="vote-btn" onclick="vote('${item.id}')">+1 👍</button>
                     </div>
                 </div>
             `).join('');
+
             updateStats();
+            console.log("Noms rendus sur la page.");
         }
 
         function updateStats() {
             const totalVotes = departmentNames.reduce((sum, item) => sum + item.votes, 0);
             const totalNames = departmentNames.length;
+
             document.getElementById('totalVotes').textContent = totalVotes;
             document.getElementById('totalNames').textContent = totalNames;
         }
 
-        // Voter pour un nom
-        window.vote = async function(name) {
-            const nameItem = departmentNames.find(item => item.name === name);
+        // Make 'vote' function global so it can be called from `onclick` attributes
+        window.vote = async function(id) {
+            const nameItem = departmentNames.find(item => item.id === id);
             if (nameItem) {
                 nameItem.votes++;
-                if (window.firebaseApp && window.firebaseApp.isFirebaseEnabled) {
+
+                if (isFirebaseEnabled) {
                     try {
-                        const { db, doc, updateDoc } = window.firebaseApp;
                         await updateDoc(doc(db, 'departmentNames', nameItem.id), {
                             votes: nameItem.votes
                         });
+                        renderNames();
+                        console.log(`Vote enregistré pour ${nameItem.name}`);
                     } catch (error) {
                         console.error('Erreur mise à jour Firebase:', error);
-                        saveToLocalStorage();
-                        updateFirebaseStatus(false);
+                        showMessage('addMessage', '⚠️ Erreur lors de la mise à jour du vote dans Firebase.', true);
+                        nameItem.votes--;
+                        renderNames();
                     }
                 } else {
-                    saveToLocalStorage();
+                    showMessage('addMessage', '⚠️ Firebase non connecté. Vote non sauvegardé.', true);
+                    nameItem.votes--;
                 }
-                renderNames();
-                // Animation de feedback
+
                 const voteButtons = document.querySelectorAll('.vote-btn');
                 voteButtons.forEach(btn => {
-                    if (btn.textContent.includes('👍')) {
+                    if (btn.onclick.toString().includes(`vote('${id}')`)) {
                         btn.style.transform = 'scale(1.1)';
                         setTimeout(() => {
                             btn.style.transform = '';
@@ -497,7 +414,6 @@
             }
         }
 
-        // Ajouter un nouveau nom
         async function addName() {
             const input = document.getElementById('newNameInput');
             const newName = input.value.trim();
@@ -506,96 +422,53 @@
                 showMessage('addMessage', '⚠️ Veuillez entrer un nom', true);
                 return;
             }
+
             if (newName.length > 100) {
                 showMessage('addMessage', '⚠️ Le nom est trop long (max 100 caractères)', true);
                 return;
             }
+
             if (departmentNames.some(item => item.name.toLowerCase() === newName.toLowerCase())) {
                 showMessage('addMessage', '⚠️ Ce nom existe déjà', true);
                 return;
             }
 
-            const newItem = { name: newName, votes: 1 };
-            if (window.firebaseApp && window.firebaseApp.isFirebaseEnabled) {
+            if (isFirebaseEnabled) {
                 try {
-                    const { db, collection, addDoc } = window.firebaseApp;
+                    const newItem = { name: newName, votes: 1 };
                     const docRef = await addDoc(collection(db, 'departmentNames'), newItem);
                     newItem.id = docRef.id;
+                    departmentNames.push(newItem);
+                    input.value = '';
+                    renderNames();
                     showMessage('addMessage', '✅ Nom ajouté avec succès dans la base de données !');
+                    console.log(`Nom ajouté: ${newName}`);
                 } catch (error) {
                     console.error('Erreur ajout Firebase:', error);
-                    newItem.id = Date.now().toString();
-                    saveToLocalStorage();
-                    showMessage('addMessage', '✅ Nom ajouté localement (erreur de synchronisation)');
-                    updateFirebaseStatus(false);
+                    showMessage('addMessage', '❌ Erreur lors de l\'ajout du nom dans Firebase.', true);
                 }
             } else {
-                newItem.id = Date.now().toString();
-                saveToLocalStorage();
-                showMessage('addMessage', '✅ Nom ajouté localement !');
-            }
-            departmentNames.push(newItem);
-            input.value = '';
-            renderNames();
-        }
-
-        // Sauvegarder les résultats (corrigé en async)
-        async function saveResults() {
-            if (await saveData()) {
-                const dataStr = JSON.stringify(departmentNames, null, 2);
-                const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `resultats_vote_departement_${new Date().toISOString().split('T')[0]}.json`;
-                link.click();
-                URL.revokeObjectURL(url);
-                showMessage('saveMessage', '✅ Résultats sauvegardés avec succès !');
-            } else {
-                showMessage('saveMessage', '❌ Erreur lors de la sauvegarde', true);
+                showMessage('addMessage', '⚠️ Firebase non connecté. Impossible d\'ajouter le nom.', true);
             }
         }
 
-        // Affichage du statut Firebase
-        function updateFirebaseStatus(isConnected) {
-            const statusDiv = document.getElementById('firebaseStatus');
-            if (isConnected) {
-                statusDiv.classList.add('connected');
-                statusDiv.classList.remove('disconnected');
-                statusDiv.innerHTML = '<p>🟢 Connecté à la base de données Firebase</p>';
-            } else {
-                statusDiv.classList.remove('connected');
-                statusDiv.classList.add('disconnected');
-                statusDiv.innerHTML = '<p>🟠 Mode hors ligne ou erreur de connexion à Firebase</p>';
-            }
-        }
-
-        // Event listeners
         document.getElementById('addNameBtn').addEventListener('click', addName);
         document.getElementById('newNameInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 addName();
             }
         });
-        document.getElementById('saveBtn').addEventListener('click', saveResults);
 
-        // Initialisation
         async function init() {
             await loadData();
             renderNames();
         }
-        init();
+
+        // Call init() once the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            init(); // Now init() is guaranteed to be defined
+        });
+
     </script>
-    <style>
-        /* Accessibilité visuelle cachée */
-        .visually-hidden {
-            position: absolute;
-            left: -10000px;
-            top: auto;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-        }
-    </style>
 </body>
 </html>
